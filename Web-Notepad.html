@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Web-Notepad</title>
+	<style>
+	@import url(http://fonts.googleapis.com/css?family=Noto+Sans);
+	@import url(http://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+	html, body{
+		width: 100%;
+		height: 100%;
+		border: 0;
+		margin: 0;
+	}
+	textarea{
+		width: 100vw;
+    	height: 100vh;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		font-size:2rem;
+		padding:4rem;
+		line-height:1.4;
+		border: none;
+		display: flex;
+    	align-items: center;
+    	justify-content: center;
+    	font-family: 'Noto Sans', 'cwTeXYen';
+	}
+	textarea:focus{
+    	outline: 0;
+	}
+	</style>
+</head>
+<body>
+	<textarea id="textarea" oninput="savedata();" autofocus spellcheck="false"></textarea>
+	<script>
+	function loaddata(){
+		if(window.localStorage["data"]){
+			document.getElementById("textarea").value = window.localStorage["data"];
+		}
+	}
+	function savedata(){
+		window.localStorage["data"] = document.getElementById("textarea").value;
+	}
+
+	//code copy from http://stackoverflow.com/questions/1601593/fire-tab-keypress-event-in-javascript
+	document.getElementById('textarea').onkeydown = function(e){
+		if (e.keyCode == 9) {
+			insertAtCursor('    ');
+			return false;
+		}
+	}
+
+	// code edit from http://jsfiddle.net/Znarkus/Z99mK/
+	function insertAtCursor(myValue) {
+		myField = document.getElementById("textarea");
+	    //IE support
+	    if (document.selection) {
+	        myField.focus();
+	        sel = document.selection.createRange();
+	        sel.text = myValue;
+	    }
+	    //MOZILLA and others
+	    else if (myField.selectionStart || myField.selectionStart == '0') {
+	        var startPos = myField.selectionStart;
+	        var endPos = myField.selectionEnd;
+	        myField.value = myField.value.substring(0, startPos)
+	            + myValue
+	            + myField.value.substring(endPos, myField.value.length);
+	        myField.selectionStart = startPos + myValue.length;
+	        myField.selectionEnd = startPos + myValue.length;
+	    } else {
+	        myField.value += myValue;
+	    }
+	}
+	loaddata();
+	</script>
+</body>
+</html>
